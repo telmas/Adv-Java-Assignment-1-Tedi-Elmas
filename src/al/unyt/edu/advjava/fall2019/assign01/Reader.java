@@ -17,7 +17,7 @@ public class Reader {
     public void readStopWords(){
         Path stopWordsPath =  Paths.get("src/local/stopwords");
         List<Path> filteredAbsolutePaths = getFilePaths(stopWordsPath);
-        filteredAbsolutePaths.forEach(path -> Repository.getInstance().getStopWords().addAll(getTextFileWords(path)));
+        filteredAbsolutePaths.forEach(path -> Repository.getInstance().getStopWords().addAll(getTextFileWords(path, true)));
     }
 
     public List<Path> getFilePaths(Path folderPath) {
@@ -39,12 +39,14 @@ public class Reader {
         return new ArrayList<Path>();
     }
 
-    public synchronized List<String> getTextFileWords(Path filePath) {
+    public synchronized List<String> getTextFileWords(Path filePath, boolean readingStopWordsFile) {
         Pattern pattern = Pattern.compile("\\s+");
         try {
             return Files.lines(filePath, StandardCharsets.ISO_8859_1)
+                    .filter( line -> (readingStopWordsFile? !line.startsWith("#") : true))
                     .map(line -> line.replaceAll("[?!',`.;:\\-(){}\\]\\[\"]", ""))
                     .flatMap(pattern::splitAsStream)
+                    .filter(word -> !word.trim().equals(""))
                     .map(String::toLowerCase)
                     .collect(Collectors.toList());
         } catch (IOException e) {
@@ -54,7 +56,7 @@ public class Reader {
     }
 
     public synchronized void readTextFile(Path filePath) {
-        getTextFileWords(filePath)
+        getTextFileWords(filePath, false)
                 .stream()
                 .filter(word -> !Repository.getInstance().isStopWord(word))
                 .forEach(word -> {

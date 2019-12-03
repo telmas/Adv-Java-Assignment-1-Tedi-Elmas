@@ -24,7 +24,6 @@ public class Processor {
                 endTime = LocalTime.now();
                 scheduledExecutorService.shutdown();
                 printFinalStatistics();
-//                System.out.println("No");
 //                System.out.println(Repository.getInstance().getWordsHashMap().entrySet().toString());
 //                System.out.println(Repository.getInstance().getUnigramHashMap().entrySet().toString());
 //                System.out.println(Repository.getInstance().getBigramHashMap().entrySet().toString());

@@ -43,9 +43,9 @@ public class Reader {
         Pattern pattern = Pattern.compile("\\s+");
         try {
             return Files.lines(filePath, StandardCharsets.ISO_8859_1)
-                    .filter( line -> (readingStopWordsFile? !line.startsWith("#") : true))
-                    .map(line -> line.replaceAll("[?!',`.;:\\-(){}\\]\\[\"]", ""))
+                    .filter(line -> (readingStopWordsFile? !line.startsWith("#") : true))
                     .flatMap(pattern::splitAsStream)
+                    .map(word -> word.replaceAll("[^A-Za-z0-9]+", ""))
                     .filter(word -> !word.trim().equals(""))
                     .map(String::toLowerCase)
                     .collect(Collectors.toList());
@@ -71,7 +71,7 @@ public class Reader {
         Repository.getInstance().getWordsHashMap().put(word, ++counter);
     }
 
-    private static synchronized void updateUnigramRepository(String word){
+    private synchronized void updateUnigramRepository(String word){
         char[] wordChars = word.toCharArray();
         for (int i = 0; i < wordChars.length; i++) {
             String charAsString = String.valueOf(wordChars[i]);

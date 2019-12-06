@@ -3,11 +3,11 @@ package al.unyt.edu.advjava.fall2019.assign01;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -34,7 +34,7 @@ public class Reader {
                     .collect(Collectors.toList());
         } catch (IOException e) {
 //            e.printStackTrace();
-            System.out.println("Text files is incorrect.");
+            System.out.println("Text files is   incorrect.");
         }
         return new ArrayList<Path>();
     }
@@ -56,6 +56,7 @@ public class Reader {
     }
 
     public synchronized void readTextFile(Path filePath) {
+        AtomicReference<Long> fileWordCount = new AtomicReference<>(0L);
         getTextFileWords(filePath, false)
                 .stream()
                 .filter(word -> !Repository.getInstance().isStopWord(word))
@@ -63,11 +64,13 @@ public class Reader {
                     updateWordsRepository(word);
                     updateUnigramRepository(word);
                     updateBigramRepository(word);
+                    fileWordCount.getAndSet(fileWordCount.get() + 1);
                 });
+        Repository.getInstance().getFileWordCount().add(fileWordCount.get());
     }
 
     private synchronized void updateWordsRepository(String word) {
-        int counter = Repository.getInstance().getWordsHashMap().getOrDefault(word, 0);
+        Long counter = Repository.getInstance().getWordsHashMap().getOrDefault(word, 0L);
         Repository.getInstance().getWordsHashMap().put(word, ++counter);
     }
 
@@ -75,17 +78,23 @@ public class Reader {
         char[] wordChars = word.toCharArray();
         for (int i = 0; i < wordChars.length; i++) {
             String charAsString = String.valueOf(wordChars[i]);
-            int counter = Repository.getInstance().getUnigramHashMap().getOrDefault(charAsString, 0);
+            Long counter = Repository.getInstance().getUnigramHashMap().getOrDefault(charAsString, 0L);
             Repository.getInstance().getUnigramHashMap().put(charAsString, ++counter);
         }
     }
 
     private synchronized void updateBigramRepository(String word){
-        int lastStringStartIndex = word.length() - 2; // (2 -> pair of letters)
+        int lastStringStartIndex = word.length() - 1 ;
         for (int i = 0; i < lastStringStartIndex; i++) {
             String charPair = word.substring(i, i + 2);
-            int counter = Repository.getInstance().getBigramHashMap().getOrDefault(charPair, 0);
+            Long counter = Repository.getInstance().getBigramHashMap().getOrDefault(charPair, 0L);
             Repository.getInstance().getBigramHashMap().put(charPair, ++counter);
         }
     }
+
+
+
+//    double average = wordsPerFile.stream().mapToLong(Long::longValue).average().orElse(0L);
+//    double sum = (wordsPerFile.stream().mapToDouble(value -> Math.pow(value - average, 2)).sum()) / wordsPerFile.size();
+//        return Math.sqrt(sum);
 }

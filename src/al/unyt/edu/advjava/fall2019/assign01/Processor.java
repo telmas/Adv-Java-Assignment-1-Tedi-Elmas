@@ -63,8 +63,9 @@ public class Processor {
         System.out.printf("%s",
                 "\tFinal execution time: " + getFinalExecutionTime() + " ms\n" +
                         "\t\t " + getExecutorCompletedTaskCount() + " files processed\n" +
-                        "\t\t Total words: " + Repository.getInstance().getWordsHashMap().values().stream().reduce(0, Integer::sum) + "\n"+
+                        "\t\t Total words: " + Repository.getInstance().getWordsHashMap().values().stream().reduce(0L, Long::sum) + "\n"+
                         "\t\t Std. Dev: " + calculateStandardDeviationOnNumberOfWords(Repository.getInstance().getWordsHashMap()) + "\n" +
+                        "\t\t Std. Dev for file word count: " + calculateStandardDeviationOnNumberOfWordsPerFile(Repository.getInstance().getFileWordCount()) + "\n" +
                         "\t\t Letters: " + getMostFrequentEntries(Repository.getInstance().getUnigramHashMap(), 5) + "\n" +
                         "\t\t Pairs: " + getMostFrequentEntries(Repository.getInstance().getBigramHashMap(), 5) + "\n" +
                         "\t\t Words: " + getMostFrequentEntries(Repository.getInstance().getWordsHashMap(), 5) + "\n" +
@@ -73,57 +74,49 @@ public class Processor {
         );
     }
 
-    public List<Map.Entry<String, Integer>> getMostFrequentEntries(ConcurrentHashMap<String, Integer> hashMap) {
+    public List<Map.Entry<String, Long>> getMostFrequentEntries(ConcurrentHashMap<String, Long> hashMap) {
         return getMostFrequentEntries(hashMap, Integer.MAX_VALUE);
     }
 
-    public List<Map.Entry<String, Integer>> getMostFrequentEntries(ConcurrentHashMap<String, Integer> hashMap, int topEntriesNumber) {
+    public List<Map.Entry<String, Long>> getMostFrequentEntries(ConcurrentHashMap<String, Long> hashMap, int topEntriesNumber) {
         return hashMap
                 .entrySet()
                 .parallelStream()
-                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
                 .limit(topEntriesNumber)
                 .collect(Collectors.toList());
     }
 
-    public double calculateStandardDeviationOnNumberOfWords(ConcurrentHashMap<String, Integer> wordsHashMap) {
-        double wordCountMean = wordsHashMap.values().stream().mapToLong(Integer::longValue).average().orElse(0d);
+    public double calculateStandardDeviationOnNumberOfWords(ConcurrentHashMap<String, Long> wordsHashMap) {
+        double wordCountMean = wordsHashMap.values().stream().mapToLong(Long::longValue).average().orElse(0d);
         double sum = wordsHashMap.values().stream().mapToDouble(count -> (count - wordCountMean) * (count - wordCountMean)).sum();
-        return Math.sqrt(sum / wordsHashMap.size());//sduhet size duhet total words apo jo?
+        return Math.sqrt(sum / wordsHashMap.size());
     }
 
-    public double calculateEntropy(ConcurrentHashMap<String, Integer> hashMap) {
+    public double calculateStandardDeviationOnNumberOfWordsPerFile(CopyOnWriteArrayList<Long> fileWordCountArrayList) {
+
+
+        double average = fileWordCountArrayList.stream().mapToLong(Long::longValue).average().orElse(0L);
+        double sum = fileWordCountArrayList.stream().mapToDouble(value -> Math.pow(value - average, 2)).sum();
+        return Math.sqrt(sum / fileWordCountArrayList.size());
+
+
+
+//        double wordCountMean = wordsHashMap.values().stream().mapToLong(Long::longValue).average().orElse(0d);
+//        double sum = wordsHashMap.values().stream().mapToDouble(count -> (count - wordCountMean) * (count - wordCountMean)).sum();
+//        return Math.sqrt(sum / wordsHashMap.size());
+    }
+
+    public double calculateEntropy(ConcurrentHashMap<String, Long> hashMap) {
         return hashMap
                 .values()
                 .parallelStream()
                 .map(count -> (double) count / hashMap
                         .values()
                         .parallelStream()
-                        .mapToDouble(Integer::doubleValue)
+                        .mapToDouble(Long::doubleValue)
                         .sum())
                 .map(frequency -> (frequency * (Math.log(frequency) / Math.log(2))))
                 .reduce(0d, Double::sum) * -1;
-
-
-
-//
-//        double entropy = 0.0;
-//
-//        Integer denominator = 0;
-//
-//        denominator = hashMap.keySet()
-//                .stream()
-//                .map((sequence) -> hashMap.get(sequence))
-//                .reduce(denominator, Integer::sum);
-//
-//        for (String sequence : hashMap.keySet()) {
-//
-//            double frequency = (double) hashMap.get(sequence) / denominator;
-//            entropy -= frequency * (Math.log(frequency) / Math.log(2));
-//
-//        }
-//
-//        return entropy;
-
     }
 }

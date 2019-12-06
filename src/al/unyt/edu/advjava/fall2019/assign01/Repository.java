@@ -2,15 +2,17 @@ package al.unyt.edu.advjava.fall2019.assign01;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Repository {
 
     private static final Repository INSTANCE = new Repository();
 
-    private ArrayList<String> stopWords = new ArrayList<>();;
-    private ConcurrentHashMap<String, Integer> wordsHashMap = new ConcurrentHashMap<>();
-    private ConcurrentHashMap<String, Integer> unigramHashMap = new ConcurrentHashMap<>();
-    private ConcurrentHashMap<String, Integer> bigramHashMap = new ConcurrentHashMap<>();
+    private ArrayList<String> stopWords = new ArrayList<>();
+    private CopyOnWriteArrayList<Long> fileWordCount = new CopyOnWriteArrayList<>();
+    private ConcurrentHashMap<String, Long> wordsHashMap = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Long> unigramHashMap = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Long> bigramHashMap = new ConcurrentHashMap<>();
 
     private Repository() {
     }
@@ -24,21 +26,6 @@ public class Repository {
         return getStopWords().contains(word.toLowerCase());
     }
 
-    public ConcurrentHashMap<String, Integer> getWordsHashMap() {
-        return wordsHashMap;
-    }
-
-    public void setWordsHashMap(ConcurrentHashMap<String, Integer> wordsHashMap) {
-        this.wordsHashMap = wordsHashMap;
-    }
-
-    public ConcurrentHashMap<String, Integer> getBigramHashMap() {
-        return bigramHashMap;
-    }
-
-    public void setBigramHashMap(ConcurrentHashMap<String, Integer> bigramHashMap) {
-        this.bigramHashMap = bigramHashMap;
-    }
 
     public ArrayList<String> getStopWords() {
         return stopWords;
@@ -48,11 +35,35 @@ public class Repository {
         this.stopWords = stopWords;
     }
 
-    public ConcurrentHashMap<String, Integer> getUnigramHashMap() {
+    public ConcurrentHashMap<String, Long> getWordsHashMap() {
+        return wordsHashMap;
+    }
+
+    public void setWordsHashMap(ConcurrentHashMap<String, Long> wordsHashMap) {
+        this.wordsHashMap = wordsHashMap;
+    }
+
+    public ConcurrentHashMap<String, Long> getUnigramHashMap() {
         return unigramHashMap;
     }
 
-    public void setUnigramHashMap(ConcurrentHashMap<String, Integer> unigramHashMap) {
+    public void setUnigramHashMap(ConcurrentHashMap<String, Long> unigramHashMap) {
         this.unigramHashMap = unigramHashMap;
+    }
+
+    public ConcurrentHashMap<String, Long> getBigramHashMap() {
+        return bigramHashMap;
+    }
+
+    public void setBigramHashMap(ConcurrentHashMap<String, Long> bigramHashMap) {
+        this.bigramHashMap = bigramHashMap;
+    }
+
+    public CopyOnWriteArrayList<Long> getFileWordCount() {
+        return fileWordCount;
+    }
+
+    public void setFileWordCount(CopyOnWriteArrayList<Long> fileWordCount) {
+        this.fileWordCount = fileWordCount;
     }
 }

@@ -94,17 +94,9 @@ public class Processor {
     }
 
     public double calculateStandardDeviationOnNumberOfWordsPerFile(CopyOnWriteArrayList<Long> fileWordCountArrayList) {
-
-
-        double average = fileWordCountArrayList.stream().mapToLong(Long::longValue).average().orElse(0L);
-        double sum = fileWordCountArrayList.stream().mapToDouble(value -> Math.pow(value - average, 2)).sum();
+        double wordCountMean = fileWordCountArrayList.stream().mapToLong(Long::longValue).average().orElse(0d);
+        double sum = fileWordCountArrayList.stream().mapToDouble(count -> (count - wordCountMean) * (count - wordCountMean)).sum();
         return Math.sqrt(sum / fileWordCountArrayList.size());
-
-
-
-//        double wordCountMean = wordsHashMap.values().stream().mapToLong(Long::longValue).average().orElse(0d);
-//        double sum = wordsHashMap.values().stream().mapToDouble(count -> (count - wordCountMean) * (count - wordCountMean)).sum();
-//        return Math.sqrt(sum / wordsHashMap.size());
     }
 
     public double calculateEntropy(ConcurrentHashMap<String, Long> hashMap) {

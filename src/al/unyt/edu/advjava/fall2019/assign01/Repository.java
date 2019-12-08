@@ -2,14 +2,13 @@ package al.unyt.edu.advjava.fall2019.assign01;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Repository {
 
     private static final Repository INSTANCE = new Repository();
 
     private ArrayList<String> stopWords = new ArrayList<>();
-    private CopyOnWriteArrayList<Long> fileWordCount = new CopyOnWriteArrayList<>();
+    private ConcurrentHashMap<String, Long> fileWordCountHashMap = new ConcurrentHashMap<>();
     private ConcurrentHashMap<String, Long> wordsHashMap = new ConcurrentHashMap<>();
     private ConcurrentHashMap<String, Long> unigramHashMap = new ConcurrentHashMap<>();
     private ConcurrentHashMap<String, Long> bigramHashMap = new ConcurrentHashMap<>();
@@ -59,11 +58,11 @@ public class Repository {
         this.bigramHashMap = bigramHashMap;
     }
 
-    public CopyOnWriteArrayList<Long> getFileWordCount() {
-        return fileWordCount;
+    public ConcurrentHashMap<String, Long> getFileWordCountHashMap() {
+        return fileWordCountHashMap;
     }
 
-    public void setFileWordCount(CopyOnWriteArrayList<Long> fileWordCount) {
-        this.fileWordCount = fileWordCount;
+    public void setFileWordCountHashMap(ConcurrentHashMap<String, Long> fileWordCountHashMap) {
+        this.fileWordCountHashMap = fileWordCountHashMap;
     }
 }

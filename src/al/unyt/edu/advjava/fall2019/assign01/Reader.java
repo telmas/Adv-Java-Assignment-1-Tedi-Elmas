@@ -33,8 +33,7 @@ public class Reader {
                     .map(Path::toAbsolutePath)
                     .collect(Collectors.toList());
         } catch (IOException e) {
-//            e.printStackTrace();
-            System.out.println("Text files is   incorrect.");
+            System.out.println("Text files folder path is incorrect.");
         }
         return new ArrayList<Path>();
     }
@@ -43,7 +42,7 @@ public class Reader {
         Pattern pattern = Pattern.compile("\\s+");
         try {
             return Files.lines(filePath, StandardCharsets.ISO_8859_1)
-                    .filter(line -> (readingStopWordsFile? !line.startsWith("#") : true))
+                    .filter(line -> (!readingStopWordsFile || !line.startsWith("#")))
                     .flatMap(pattern::splitAsStream)
                     .map(word -> word.replaceAll("[^A-Za-z0-9]+", ""))
                     .filter(word -> !word.trim().equals(""))
@@ -66,7 +65,13 @@ public class Reader {
                     updateBigramRepository(word);
                     fileWordCount.getAndSet(fileWordCount.get() + 1);
                 });
-        Repository.getInstance().getFileWordCount().add(fileWordCount.get());
+        String fileName = filePath.getFileName().toString();
+        String textFileName = fileName.substring(0, fileName.lastIndexOf("."));
+        updateFileWordCountRepository(textFileName, fileWordCount.get());
+    }
+
+    private synchronized void updateFileWordCountRepository(String path, long count){
+        Repository.getInstance().getFileWordCountHashMap().put(path, count);
     }
 
     private synchronized void updateWordsRepository(String word) {
@@ -91,10 +96,4 @@ public class Reader {
             Repository.getInstance().getBigramHashMap().put(charPair, ++counter);
         }
     }
-
-
-
-//    double average = wordsPerFile.stream().mapToLong(Long::longValue).average().orElse(0L);
-//    double sum = (wordsPerFile.stream().mapToDouble(value -> Math.pow(value - average, 2)).sum()) / wordsPerFile.size();
-//        return Math.sqrt(sum);
 }

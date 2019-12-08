@@ -1,6 +1,5 @@
 package al.unyt.edu.advjava.fall2019.assign01;
 
-import java.time.Duration;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
@@ -11,8 +10,8 @@ public class Processor {
 
     private  ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
     private ExecutorService executorService;
-    LocalTime startTime;
-    LocalTime endTime;
+    private LocalTime startTime;
+    private LocalTime endTime;
 
     public Processor(ExecutorService executorService) {
         this.executorService = executorService;
@@ -21,13 +20,9 @@ public class Processor {
     void processProgressBuffer() {
         ScheduledFuture<?> scheduledFuture = scheduledExecutorService.scheduleAtFixedRate(() -> {
             if (getExecutorActiveThreadCount() == 0) {
-                endTime = LocalTime.now();
+                setEndTime(LocalTime.now());
                 scheduledExecutorService.shutdown();
                 printFinalStatistics();
-//                System.out.println(Repository.getInstance().getWordsHashMap().entrySet().toString());
-//                System.out.println(Repository.getInstance().getUnigramHashMap().entrySet().toString());
-//                System.out.println(Repository.getInstance().getBigramHashMap().entrySet().toString());
-//                System.out.println(Repository.getInstance().getStopWords().toString());
                 return;
             }
             printCurrentStatistics();
@@ -43,12 +38,12 @@ public class Processor {
     }
 
     private long getFinalExecutionTime() {
-        return (endTime.toNanoOfDay() - startTime.toNanoOfDay()) / 1_000_000;
+        return (getEndTime().toNanoOfDay() - getStartTime().toNanoOfDay()) / 1_000_000;
     }
 
     private void printCurrentStatistics() {
         System.out.printf("%s",
-                "\tElapsed 500 ms: \n" +
+                "Elapsed 500 ms: \n" +
                         "\t\t " + getExecutorCompletedTaskCount() + " files processed\n" +
                         "\t\t " + getExecutorActiveThreadCount() + " files processing\n" +
                         "\t\t Letters: " + getMostFrequentEntries(Repository.getInstance().getUnigramHashMap(), 5) + "\n" +
@@ -61,11 +56,10 @@ public class Processor {
 
     private void printFinalStatistics() {
         System.out.printf("%s",
-                "\tFinal execution time: " + getFinalExecutionTime() + " ms\n" +
+                "Final execution time: " + getFinalExecutionTime() + " ms:\n" +
                         "\t\t " + getExecutorCompletedTaskCount() + " files processed\n" +
                         "\t\t Total words: " + Repository.getInstance().getWordsHashMap().values().stream().reduce(0L, Long::sum) + "\n"+
-                        "\t\t Std. Dev: " + calculateStandardDeviationOnNumberOfWords(Repository.getInstance().getWordsHashMap()) + "\n" +
-                        "\t\t Std. Dev for file word count: " + calculateStandardDeviationOnNumberOfWordsPerFile(Repository.getInstance().getFileWordCount()) + "\n" +
+                        "\t\t Std. Dev: " + calculateStandardDeviationOnNumberOfWords(Repository.getInstance().getFileWordCountHashMap()) + "\n" +
                         "\t\t Letters: " + getMostFrequentEntries(Repository.getInstance().getUnigramHashMap(), 5) + "\n" +
                         "\t\t Pairs: " + getMostFrequentEntries(Repository.getInstance().getBigramHashMap(), 5) + "\n" +
                         "\t\t Words: " + getMostFrequentEntries(Repository.getInstance().getWordsHashMap(), 5) + "\n" +
@@ -87,16 +81,10 @@ public class Processor {
                 .collect(Collectors.toList());
     }
 
-    public double calculateStandardDeviationOnNumberOfWords(ConcurrentHashMap<String, Long> wordsHashMap) {
-        double wordCountMean = wordsHashMap.values().stream().mapToLong(Long::longValue).average().orElse(0d);
-        double sum = wordsHashMap.values().stream().mapToDouble(count -> (count - wordCountMean) * (count - wordCountMean)).sum();
-        return Math.sqrt(sum / wordsHashMap.size());
-    }
-
-    public double calculateStandardDeviationOnNumberOfWordsPerFile(CopyOnWriteArrayList<Long> fileWordCountArrayList) {
-        double wordCountMean = fileWordCountArrayList.stream().mapToLong(Long::longValue).average().orElse(0d);
-        double sum = fileWordCountArrayList.stream().mapToDouble(count -> (count - wordCountMean) * (count - wordCountMean)).sum();
-        return Math.sqrt(sum / fileWordCountArrayList.size());
+    public double calculateStandardDeviationOnNumberOfWords(ConcurrentHashMap<String, Long> fileWordCountHashMap) {
+        double wordCountMean = fileWordCountHashMap.values().stream().mapToLong(Long::longValue).average().orElse(0d);
+        double sum = fileWordCountHashMap.values().stream().mapToDouble(count -> (count - wordCountMean) * (count - wordCountMean)).sum();
+        return Math.sqrt(sum / fileWordCountHashMap.size());
     }
 
     public double calculateEntropy(ConcurrentHashMap<String, Long> hashMap) {
@@ -110,5 +98,21 @@ public class Processor {
                         .sum())
                 .map(frequency -> (frequency * (Math.log(frequency) / Math.log(2))))
                 .reduce(0d, Double::sum) * -1;
+    }
+
+    public LocalTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalTime endTime) {
+        this.endTime = endTime;
     }
 }

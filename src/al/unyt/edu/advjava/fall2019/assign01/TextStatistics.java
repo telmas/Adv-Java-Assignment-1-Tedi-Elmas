@@ -11,9 +11,9 @@ package al.unyt.edu.advjava.fall2019.assign01;
  */
 public class TextStatistics {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
 
-        // path = "src/local/folder"
+        //ex: path = "src/local/folder"
         if (args.length < 1 || args[0] == null || args[0].trim().equals("") || args[0].isEmpty()) {
             System.out.printf("%s", "Attention! The required local folder path is not passed as argument!");
             return;

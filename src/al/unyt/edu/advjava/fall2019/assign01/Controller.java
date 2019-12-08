@@ -26,7 +26,7 @@ public class Controller {
         try {
             List<Path> filteredAbsolutePaths = reader.getFilePaths(localFolderPath, 1000);
 
-            processor.startTime = LocalTime.now();
+            processor.setStartTime(LocalTime.now());
             filteredAbsolutePaths.forEach(filePath -> {
                 executorService.execute(() -> reader.readTextFile(filePath));
             });

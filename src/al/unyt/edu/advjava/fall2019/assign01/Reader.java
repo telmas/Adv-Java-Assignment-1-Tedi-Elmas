@@ -66,7 +66,7 @@ public class Reader {
                     fileWordCount.getAndSet(fileWordCount.get() + 1);
                 });
         String fileName = filePath.getFileName().toString();
-        String textFileName = fileName.substring(0, fileName.lastIndexOf("."));
+        String textFileName = fileName.substring(0, fileName.lastIndexOf(".txt"));
         updateFileWordCountRepository(textFileName, fileWordCount.get());
     }
 

@@ -1,0 +1,9 @@
+The project itself provides some text files (books) from the GutenBerg project in the "local/folder" directory.
+
+You can pass the "path" argument as in the example below if you would like to test the program with the provided files.
+Example: args[0] = "src/local/folder"
+
+If you would like to test it with another preferred folder you can also pass absolute paths such as:
+"C:\Users\tedie\Desktop\GutenBerg Books"
+
+Make sure to pass them as String values with the double quotation marks: ""

@@ -60,40 +60,13 @@ public class Reader {
                 .stream()
                 .filter(word -> !Repository.getInstance().isStopWord(word))
                 .forEach(word -> {
-                    updateWordsRepository(word);
-                    updateUnigramRepository(word);
-                    updateBigramRepository(word);
+                    Repository.getInstance().updateWordsRepository(word);
+                    Repository.getInstance().updateUnigramRepository(word);
+                    Repository.getInstance().updateBigramRepository(word);
                     fileWordCount.getAndSet(fileWordCount.get() + 1);
                 });
         String fileName = filePath.getFileName().toString();
         String textFileName = fileName.substring(0, fileName.lastIndexOf(".txt"));
-        updateFileWordCountRepository(textFileName, fileWordCount.get());
-    }
-
-    private synchronized void updateFileWordCountRepository(String path, long count){
-        Repository.getInstance().getFileWordCountHashMap().put(path, count);
-    }
-
-    private synchronized void updateWordsRepository(String word) {
-        Long counter = Repository.getInstance().getWordsHashMap().getOrDefault(word, 0L);
-        Repository.getInstance().getWordsHashMap().put(word, ++counter);
-    }
-
-    private synchronized void updateUnigramRepository(String word){
-        char[] wordChars = word.toCharArray();
-        for (int i = 0; i < wordChars.length; i++) {
-            String charAsString = String.valueOf(wordChars[i]);
-            Long counter = Repository.getInstance().getUnigramHashMap().getOrDefault(charAsString, 0L);
-            Repository.getInstance().getUnigramHashMap().put(charAsString, ++counter);
-        }
-    }
-
-    private synchronized void updateBigramRepository(String word){
-        int lastStringStartIndex = word.length() - 1 ;
-        for (int i = 0; i < lastStringStartIndex; i++) {
-            String charPair = word.substring(i, i + 2);
-            Long counter = Repository.getInstance().getBigramHashMap().getOrDefault(charPair, 0L);
-            Repository.getInstance().getBigramHashMap().put(charPair, ++counter);
-        }
+        Repository.getInstance().updateFileWordCountRepository(textFileName, fileWordCount.get());
     }
 }

@@ -65,4 +65,31 @@ public class Repository {
     public void setFileWordCountHashMap(ConcurrentHashMap<String, Long> fileWordCountHashMap) {
         this.fileWordCountHashMap = fileWordCountHashMap;
     }
+
+    synchronized void updateFileWordCountRepository(String path, long count){
+        getFileWordCountHashMap().put(path, count);
+    }
+
+    synchronized void updateWordsRepository(String word) {
+        Long counter = Repository.getInstance().getWordsHashMap().getOrDefault(word, 0L);
+        getWordsHashMap().put(word, ++counter);
+    }
+
+    synchronized void updateUnigramRepository(String word){
+        char[] wordChars = word.toCharArray();
+        for (int i = 0; i < wordChars.length; i++) {
+            String charAsString = String.valueOf(wordChars[i]);
+            Long counter = Repository.getInstance().getUnigramHashMap().getOrDefault(charAsString, 0L);
+            getUnigramHashMap().put(charAsString, ++counter);
+        }
+    }
+
+    synchronized void updateBigramRepository(String word){
+        int lastStringStartIndex = word.length() - 1 ;
+        for (int i = 0; i < lastStringStartIndex; i++) {
+            String charPair = word.substring(i, i + 2);
+            Long counter = Repository.getInstance().getBigramHashMap().getOrDefault(charPair, 0L);
+            getBigramHashMap().put(charPair, ++counter);
+        }
+    }
 }

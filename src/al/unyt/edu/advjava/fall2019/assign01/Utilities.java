@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-public class Utils {
+public class Utilities {
 
     public static List<Map.Entry<String, Long>> getMostFrequentEntries(ConcurrentHashMap<String, Long> hashMap) {
         return getMostFrequentEntries(hashMap, Integer.MAX_VALUE);
@@ -38,5 +38,4 @@ public class Utils {
                 .map(frequency -> (frequency * (Math.log(frequency) / Math.log(2))))
                 .reduce(0d, Double::sum) * -1;
     }
-
 }

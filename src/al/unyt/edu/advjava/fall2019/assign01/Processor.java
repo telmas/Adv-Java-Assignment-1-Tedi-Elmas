@@ -43,11 +43,11 @@ public class Processor {
                 "Elapsed 500 ms: \n" +
                         "\t\t " + getExecutorCompletedTaskCount() + " files processed\n" +
                         "\t\t " + getExecutorActiveThreadCount() + " files processing\n" +
-                        "\t\t Letters: " + Utils.getMostFrequentEntries(Repository.getInstance().getUnigramHashMap(), 5) + "\n" +
-                        "\t\t Pairs: " + Utils.getMostFrequentEntries(Repository.getInstance().getBigramHashMap(), 5) + "\n" +
-                        "\t\t Words: " + Utils.getMostFrequentEntries(Repository.getInstance().getWordsHashMap(), 5) + "\n" +
-                        "\t\t Unigram entropy: " + Utils.calculateEntropy(Repository.getInstance().getUnigramHashMap())  + "\n" +
-                        "\t\t Bigram entropy: " + Utils.calculateEntropy(Repository.getInstance().getBigramHashMap())  + "\n"
+                        "\t\t Letters: " + Utilities.getMostFrequentEntries(Repository.getInstance().getUnigramHashMap(), 5) + "\n" +
+                        "\t\t Pairs: " + Utilities.getMostFrequentEntries(Repository.getInstance().getBigramHashMap(), 5) + "\n" +
+                        "\t\t Words: " + Utilities.getMostFrequentEntries(Repository.getInstance().getWordsHashMap(), 5) + "\n" +
+                        "\t\t Unigram entropy: " + Utilities.calculateEntropy(Repository.getInstance().getUnigramHashMap())  + "\n" +
+                        "\t\t Bigram entropy: " + Utilities.calculateEntropy(Repository.getInstance().getBigramHashMap())  + "\n"
         );
     }
 
@@ -56,12 +56,12 @@ public class Processor {
                 "Final execution time: " + getFinalExecutionTime() + " ms:\n" +
                         "\t\t " + getExecutorCompletedTaskCount() + " files processed\n" +
                         "\t\t Total words: " + Repository.getInstance().getWordsHashMap().values().stream().reduce(0L, Long::sum) + "\n"+
-                        "\t\t Std. Dev: " + Utils.calculateStandardDeviationOnNumberOfWords(Repository.getInstance().getFileWordCountHashMap()) + "\n" +
-                        "\t\t Letters: " + Utils.getMostFrequentEntries(Repository.getInstance().getUnigramHashMap(), 5) + "\n" +
-                        "\t\t Pairs: " + Utils.getMostFrequentEntries(Repository.getInstance().getBigramHashMap(), 5) + "\n" +
-                        "\t\t Words: " + Utils.getMostFrequentEntries(Repository.getInstance().getWordsHashMap(), 5) + "\n" +
-                        "\t\t Unigram entropy: " + Utils.calculateEntropy(Repository.getInstance().getUnigramHashMap())  + "\n" +
-                        "\t\t Bigram entropy: " + Utils.calculateEntropy(Repository.getInstance().getBigramHashMap())   + "\n"
+                        "\t\t Std. Dev: " + Utilities.calculateStandardDeviationOnNumberOfWords(Repository.getInstance().getFileWordCountHashMap()) + "\n" +
+                        "\t\t Letters: " + Utilities.getMostFrequentEntries(Repository.getInstance().getUnigramHashMap(), 5) + "\n" +
+                        "\t\t Pairs: " + Utilities.getMostFrequentEntries(Repository.getInstance().getBigramHashMap(), 5) + "\n" +
+                        "\t\t Words: " + Utilities.getMostFrequentEntries(Repository.getInstance().getWordsHashMap(), 5) + "\n" +
+                        "\t\t Unigram entropy: " + Utilities.calculateEntropy(Repository.getInstance().getUnigramHashMap())  + "\n" +
+                        "\t\t Bigram entropy: " + Utilities.calculateEntropy(Repository.getInstance().getBigramHashMap())   + "\n"
         );
     }
 

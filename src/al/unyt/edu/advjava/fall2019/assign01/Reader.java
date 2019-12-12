@@ -21,7 +21,7 @@ public class Reader {
     }
 
     public List<Path> getFilePaths(Path folderPath) {
-       return getFilePaths(folderPath, Integer.MAX_VALUE);
+        return getFilePaths(folderPath, Integer.MAX_VALUE);
     }
 
     public List<Path> getFilePaths(Path folderPath, int limit) {

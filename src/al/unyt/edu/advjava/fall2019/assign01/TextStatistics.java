@@ -18,8 +18,9 @@ public class TextStatistics {
             return;
         }
 
-        System.out.println("Got the local folder path argument:" + args[0]);
-        Controller fileController = new Controller(args[0]);
+        String folderPath = args[0].trim();
+        System.out.println("Got the local folder path argument:" + folderPath);
+        Controller fileController = new Controller(folderPath);
         fileController.beginProcessing();
     }
 }

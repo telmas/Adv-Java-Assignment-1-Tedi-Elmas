@@ -5,7 +5,7 @@ import java.util.concurrent.*;
 
 public class Processor {
 
-    private  ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
+    private ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
     private ExecutorService executorService;
     private LocalTime startTime;
     private LocalTime endTime;

@@ -14,10 +14,10 @@ import java.util.stream.Stream;
 
 public class Reader {
 
-    public void readStopWords(){
-        Path stopWordsPath =  Paths.get("src/local/stopwords");
+    public void readStopWords(String stringStopWordsPath){
+        Path stopWordsPath =  Paths.get(stringStopWordsPath);
         List<Path> filteredAbsolutePaths = getFilePaths(stopWordsPath);
-        filteredAbsolutePaths.forEach(path -> Repository.getInstance().getStopWords().addAll(getTextFileWords(path, true)));
+        filteredAbsolutePaths.forEach(path -> Repository.getInstance().getStopWordsArrayList().addAll(getTextFileWords(path, true)));
     }
 
     public List<Path> getFilePaths(Path folderPath) {
@@ -27,9 +27,9 @@ public class Reader {
     public List<Path> getFilePaths(Path folderPath, int limit) {
         try (Stream<Path> paths = Files.walk(folderPath)) {
             return paths
-                    .limit(limit)
                     .filter(Files::isRegularFile)
                     .filter(file -> file.getFileName().toString().endsWith(".txt"))
+                    .limit(limit)
                     .map(Path::toAbsolutePath)
                     .collect(Collectors.toList());
         } catch (IOException e) {

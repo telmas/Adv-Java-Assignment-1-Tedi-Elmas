@@ -7,7 +7,7 @@ public class Repository {
 
     private static final Repository INSTANCE = new Repository();
 
-    private ArrayList<String> stopWords = new ArrayList<>();
+    private ArrayList<String> stopWordsArrayList = new ArrayList<>();
     private ConcurrentHashMap<String, Long> fileWordCountHashMap = new ConcurrentHashMap<>();
     private ConcurrentHashMap<String, Long> wordsHashMap = new ConcurrentHashMap<>();
     private ConcurrentHashMap<String, Long> unigramHashMap = new ConcurrentHashMap<>();
@@ -22,16 +22,16 @@ public class Repository {
 
 
     public boolean isStopWord(String word){
-        return getStopWords().contains(word.toLowerCase());
+        return getStopWordsArrayList().contains(word.toLowerCase());
     }
 
 
-    public ArrayList<String> getStopWords() {
-        return stopWords;
+    public ArrayList<String> getStopWordsArrayList() {
+        return stopWordsArrayList;
     }
 
-    public void setStopWords(ArrayList<String> stopWords) {
-        this.stopWords = stopWords;
+    public void setStopWordsArrayList(ArrayList<String> stopWordsArrayList) {
+        this.stopWordsArrayList = stopWordsArrayList;
     }
 
     public ConcurrentHashMap<String, Long> getWordsHashMap() {

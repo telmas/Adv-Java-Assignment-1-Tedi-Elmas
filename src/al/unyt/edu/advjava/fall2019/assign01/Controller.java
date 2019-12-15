@@ -9,6 +9,7 @@ import java.util.concurrent.*;
 public class Controller {
 
     private ExecutorService executorService = Executors.newFixedThreadPool(50);
+    private static final String stopWordsPath =  "src/local/stopwords";
     private final Path localFolderPath;
     private Processor processor;
     private Reader reader;
@@ -21,7 +22,7 @@ public class Controller {
 
     public void beginProcessing() {
 
-        reader.readStopWords();
+        reader.readStopWords(stopWordsPath);
 
         try {
             List<Path> filteredAbsolutePaths = reader.getFilePaths(localFolderPath, 1000);

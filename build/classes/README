@@ -1,0 +1,10 @@
+When run, the program requires a directory path as a Command Line argument in order to proceed its execution.
+The path can be either relative or absolute.
+
+The project itself provides some text files (books) from the GutenBerg project in the "local/folder" directory.
+
+You can pass the "path" argument as in the example below if you would like to test the program with the provided files.
+Example: args[0] = "src/local/folder"
+
+If you would like to test it with another preferred folder you can also pass absolute paths such as:
+"C:\Users\tedie\Desktop\GutenBerg Books"
